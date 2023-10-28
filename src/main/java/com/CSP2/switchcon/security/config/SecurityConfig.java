@@ -2,6 +2,7 @@ package com.CSP2.switchcon.security.config;
 
 import com.CSP2.switchcon.security.filter.JwtTokenFilter;
 import com.CSP2.switchcon.security.provider.CustomUserService;
+import com.CSP2.switchcon.security.utils.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,9 @@ public class SecurityConfig {
                 .anyRequest().permitAll().and()
                 .anonymous().and()
                 .formLogin().disable();
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
         http
                 .addFilterBefore(new JwtTokenFilter(key, customUserService), UsernamePasswordAuthenticationFilter.class);
 
