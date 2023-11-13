@@ -39,7 +39,7 @@ jobs:
 
     - name: Upload Error Report Files To Artifacts
       if: ${{ failure() }}
-      uses: actions/upload-artifact@2
+      uses: actions/upload-artifact@v2
       with:
         name: report_files
         path: report_files_*.tar.gz
