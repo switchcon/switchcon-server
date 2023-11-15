@@ -11,11 +11,11 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class OcrResponseDTO {
 
+    private final String productName;
     private final String expireDate;
     private final String orderNum;
     private final String storeName;
-    private final String barcodeNum;
-    private final String product;
     private final String category;
-    //Todo::ocr 서버 업데이터 되면 수정
+    private final String barcodeNum;
+
 }
