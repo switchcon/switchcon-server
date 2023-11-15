@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -35,7 +35,7 @@ public class Gifticon extends DateTimeEntity {
     private String product;
 
     @Column(nullable = false)
-    private LocalDateTime expirationDate;
+    private LocalDate expireDate;
 
     @Column(nullable = false)
     private String barcodeNum;
@@ -54,18 +54,22 @@ public class Gifticon extends DateTimeEntity {
     private Member member;
 
     @Builder
-    public Gifticon(String gifticonImg, String category, String store, String product, LocalDateTime expirationDate,
+    public Gifticon(String gifticonImg, String category, String store, String product, LocalDate expireDate,
                     String barcodeNum, long price, boolean isUsed, boolean isActive, Member member) {
         this.gifticonImg = gifticonImg;
         this.category = category;
         this.store =  store;
         this.product = product;
-        this.expirationDate = expirationDate;
+        this.expireDate = expireDate;
         this.barcodeNum = barcodeNum;
         this.price = price;
         this.isUsed = isUsed;
         this.isActive = isActive;
         this.member = member;
+    }
+
+    public void updateCategory(String category) {
+        this.category = category;
     }
 
     public void updateUse(boolean isUsed) {
