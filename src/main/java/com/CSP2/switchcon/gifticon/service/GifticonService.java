@@ -40,7 +40,7 @@ public class GifticonService {
                 .gifticonImg(gifticonImg)
                 .category(ocrResponseDTO.getCategory())
                 .store(ocrResponseDTO.getStoreName())
-                .product(ocrResponseDTO.getProduct())
+                .product(ocrResponseDTO.getProductName())
                 .expireDate(expireDate)
                 .barcodeNum(ocrResponseDTO.getBarcodeNum())
                 .orderNum(ocrResponseDTO.getOrderNum())
@@ -86,7 +86,7 @@ public class GifticonService {
                 .body(BodyInserters.fromValue(Map.of("imgUrl", imgUrl)))
                 .retrieve()
                 .bodyToMono(OcrResponseDTO.class)
+                .onErrorMap(original -> new BusinessException(ErrorCode.IMG_INFO_NOT_FOUND))
                 .block();
-                //TODO::예외처리(fail 일 때)
     }
 }

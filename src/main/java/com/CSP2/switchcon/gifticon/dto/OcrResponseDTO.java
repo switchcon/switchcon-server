@@ -1,21 +1,22 @@
 package com.CSP2.switchcon.gifticon.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
-import static lombok.AccessLevel.PRIVATE;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
-@Builder(access = PRIVATE)
+@NoArgsConstructor
+@Builder
 public class OcrResponseDTO {
 
-    private final String productName;
-    private final String expireDate;
-    private final String orderNum;
-    private final String storeName;
-    private final String category;
-    private final String barcodeNum;
+    private String productName;
 
+    private String expireDate;
+
+    private String orderNum;
+
+    private String storeName;
+
+    private String category;
+
+    private String barcodeNum;
 }
