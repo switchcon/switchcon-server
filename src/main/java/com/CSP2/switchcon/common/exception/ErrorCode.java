@@ -14,7 +14,9 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "M_001", "존재하지 않는 사용자입니다."),
     DUPLICATED_USERNAME(409, "M_002", "이미 존재하는 아이디입니다."),
     INVALID_PASSWORD(401, "M_003", "비밀번호가 올바르지 않습니다."),
-    INVALID_TOKEN(401, "M_004", "토큰이 만료되었습니다.")
+    INVALID_TOKEN(401, "M_004", "토큰이 만료되었습니다."),
+
+    INVALID_EXPIRE_DATE_FORMAT(404, "G_001", "올바르지 않은 날짜 형식입니다."),
     ;
 
     private final int status;

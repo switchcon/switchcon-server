@@ -4,3 +4,5 @@ jwt:
     expired-time-ms: 2592000000
 swagger:
   server-url: http://localhost:8080
+ocr:
+  url: ${OCR_SERVER_URL}
