@@ -43,6 +43,7 @@ public class GifticonService {
                 .product(ocrResponseDTO.getProduct())
                 .expireDate(expireDate)
                 .barcodeNum(ocrResponseDTO.getBarcodeNum())
+                .orderNum(ocrResponseDTO.getOrderNum())
                 .price(10000)
                 .isUsed(false)
                 .isActive(true)

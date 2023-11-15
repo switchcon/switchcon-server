@@ -40,6 +40,8 @@ public class Gifticon extends DateTimeEntity {
     @Column(nullable = false)
     private String barcodeNum;
 
+    private String orderNum;
+
     @Column(nullable = false)
     private long price;
 
@@ -55,13 +57,14 @@ public class Gifticon extends DateTimeEntity {
 
     @Builder
     public Gifticon(String gifticonImg, String category, String store, String product, LocalDate expireDate,
-                    String barcodeNum, long price, boolean isUsed, boolean isActive, Member member) {
+                    String barcodeNum, String orderNum, long price, boolean isUsed, boolean isActive, Member member) {
         this.gifticonImg = gifticonImg;
         this.category = category;
         this.store =  store;
         this.product = product;
         this.expireDate = expireDate;
         this.barcodeNum = barcodeNum;
+        this.orderNum = orderNum;
         this.price = price;
         this.isUsed = isUsed;
         this.isActive = isActive;
