@@ -3,6 +3,7 @@ package com.CSP2.switchcon.gifticon.service;
 import com.CSP2.switchcon.common.exception.BusinessException;
 import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
+import com.CSP2.switchcon.common.exception.InvalidValueException;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.CSP2.switchcon.gifticon.dto.GifticonRequestDTO;
 import com.CSP2.switchcon.gifticon.dto.GifticonResponseDTO;
@@ -22,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,6 +106,33 @@ public class GifticonService {
         Gifticon gifticon = gifticonRepository.findByIdAndMember(member, gifticonId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
         return GifticonResponseDTO.from(gifticon);
+    }
+
+    @Transactional
+    public List<GifticonResponseDTO> getAllGifticons(Member member, String sortType) {
+        List<Gifticon> gifticons;
+        LocalDate now = LocalDate.now();
+
+        switch(sortType) {
+            case "latest":
+                gifticons = gifticonRepository.findAllByMemberAndLatest(member);
+                break ;
+            case "expiringSoon":
+                gifticons = gifticonRepository.findAllByMemberAndExpireDate(member, now);
+                break ;
+            case "highPrice":
+                gifticons = gifticonRepository.findAllByMemberAndHighPrice(member);
+                break ;
+            case "lowPrice":
+                gifticons = gifticonRepository.findAllByMemberAndLowPrice(member);
+                break ;
+            default:
+                throw new InvalidValueException(ErrorCode.INVALID_SORT_TYPE);
+        }
+
+        return gifticons.stream()
+                .map(GifticonResponseDTO::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional

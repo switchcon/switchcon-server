@@ -47,6 +47,15 @@ public class GifticonController {
         );
     }
 
+    @GetMapping("/all/{sortType}")
+    @Operation(summary = "기프티콘 전체 조회", description = "기프티콘을 전체 조회합니다.")
+    public ResponseEntity<BasicResponse> getAllGifticons(@ReqMember SecurityUserDetails securityUserDetails,
+                                                         @PathVariable ("sortType") String sortType) {
+        return basicResponse.ok(
+                gifticonService.getAllGifticons(securityUserDetails.member(), sortType)
+        );
+    }
+
     @DeleteMapping("/{gifticonId}")
     @Operation(summary = "기프티콘 삭제", description = "기프티콘을 삭제합니다.")
     public ResponseEntity<BasicResponse> delGifticon(@ReqMember SecurityUserDetails securityUserDetails,

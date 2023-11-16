@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface GifticonRepository extends JpaRepository<Gifticon, Long> {
@@ -17,4 +19,16 @@ public interface GifticonRepository extends JpaRepository<Gifticon, Long> {
     @Modifying
     @Query(value = "delete from Gifticon g where g.member = :member and g.id = :gifticonId")
     void deleteByIdAndMember(@Param("member") Member member, @Param("gifticonId") long gifticonId);
+
+    @Query(value = "select g from Gifticon g where g.member = :member order by g.createdAt DESC")
+    List<Gifticon> findAllByMemberAndLatest(@Param("member") Member member);
+
+    @Query(value = "select g from Gifticon g where g.member = :member order by ABS(DATEDIFF(:now, g.expireDate)) ASC")
+    List<Gifticon> findAllByMemberAndExpireDate(@Param("member") Member member, @Param("now") LocalDate now);
+
+    @Query(value = "select g from Gifticon g where g.member = :member order by g.price DESC")
+    List<Gifticon> findAllByMemberAndHighPrice(@Param("member") Member member);
+
+    @Query(value = "select g from Gifticon g where g.member = :member order by g.price ASC")
+    List<Gifticon> findAllByMemberAndLowPrice(@Param("member") Member member);
 }
