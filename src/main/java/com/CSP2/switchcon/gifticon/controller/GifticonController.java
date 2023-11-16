@@ -37,4 +37,14 @@ public class GifticonController {
                 gifticonService.addGifticon(securityUserDetails.member(), requestDTO)
         );
     }
+
+    @GetMapping("/{gifticonId}")
+    @Operation(summary = "기프티콘 상세 조회", description = "기프티콘을 상세 조회합니다.")
+    public ResponseEntity<BasicResponse> getGifticon(@ReqMember SecurityUserDetails securityUserDetails,
+                                                     @PathVariable ("gifticonId") long gifticonId) {
+        return basicResponse.ok(
+                gifticonService.getGifticon(securityUserDetails.member(), gifticonId)
+        );
+    }
+
 }

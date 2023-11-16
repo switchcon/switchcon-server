@@ -17,7 +17,8 @@ public enum ErrorCode {
     INVALID_TOKEN(401, "M_004", "토큰이 만료되었습니다."),
 
     INVALID_EXPIRE_DATE_FORMAT(401, "G_001", "올바르지 않은 날짜 형식입니다."),
-    IMG_INFO_NOT_FOUND(404, "G_002", "기프티콘 정보를 찾을 수 없습니다."),
+    IMG_INFO_NOT_FOUND(401, "G_002", "올바르지 않은 기프티콘 이미지입니다."),
+    GIFTICON_NOT_FOUND(404, "G_003", "기프티콘 정보를 찾을 수 없습니다."),
     ;
 
     private final int status;

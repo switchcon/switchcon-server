@@ -1,6 +1,7 @@
 package com.CSP2.switchcon.gifticon.service;
 
 import com.CSP2.switchcon.common.exception.BusinessException;
+import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.CSP2.switchcon.gifticon.dto.GifticonRequestDTO;
@@ -33,7 +34,7 @@ public class GifticonService {
 
     @Transactional
     public GifticonResponseDTO uploadGifticonImg(String gifticonImg) {
-        OcrResponseDTO ocrResponseDTO = getGifticonInfo(gifticonImg);
+        OcrResponseDTO ocrResponseDTO = getOcrData(gifticonImg);
 
         LocalDate expireDate = parseDate(ocrResponseDTO.getExpireDate());
 
@@ -61,7 +62,7 @@ public class GifticonService {
     }
 
     @Transactional
-    public OcrResponseDTO getGifticonInfo(String imgUrl) {
+    public OcrResponseDTO getOcrData(String imgUrl) {
         WebClient client = WebClient.builder()
                 .baseUrl(OCR_SERVER_URL)
                 .build();
@@ -96,5 +97,12 @@ public class GifticonService {
 
         Gifticon saved = gifticonRepository.save(gifticon);
         return GifticonResponseDTO.from(saved);
+    }
+
+    @Transactional
+    public GifticonResponseDTO getGifticon(Member member, long gifticonId) {
+        Gifticon gifticon = gifticonRepository.findByIdAndMember(member, gifticonId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
+        return GifticonResponseDTO.from(gifticon);
     }
 }
