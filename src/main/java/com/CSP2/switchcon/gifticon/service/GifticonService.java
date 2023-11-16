@@ -3,6 +3,7 @@ package com.CSP2.switchcon.gifticon.service;
 import com.CSP2.switchcon.common.exception.BusinessException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
+import com.CSP2.switchcon.gifticon.dto.GifticonRequestDTO;
 import com.CSP2.switchcon.gifticon.dto.GifticonResponseDTO;
 import com.CSP2.switchcon.gifticon.dto.OcrResponseDTO;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
@@ -31,27 +32,13 @@ public class GifticonService {
     private final GifticonRepository gifticonRepository;
 
     @Transactional
-    public GifticonResponseDTO addGifticon(Member member, String gifticonImg) {
+    public GifticonResponseDTO uploadGifticonImg(String gifticonImg) {
         OcrResponseDTO ocrResponseDTO = getGifticonInfo(gifticonImg);
 
         LocalDate expireDate = parseDate(ocrResponseDTO.getExpireDate());
 
-        Gifticon gifticon = Gifticon.builder()
-                .gifticonImg(gifticonImg)
-                .category(ocrResponseDTO.getCategory())
-                .store(ocrResponseDTO.getStoreName())
-                .product(ocrResponseDTO.getProductName())
-                .expireDate(expireDate)
-                .barcodeNum(ocrResponseDTO.getBarcodeNum())
-                .orderNum(ocrResponseDTO.getOrderNum())
-                .price(10000)
-                .isUsed(false)
-                .isActive(true)
-                .member(member)
-                .build();
-
-        Gifticon saved = gifticonRepository.save(gifticon);
-        return GifticonResponseDTO.from(saved);
+        return GifticonResponseDTO.of(gifticonImg, ocrResponseDTO.getCategory(), ocrResponseDTO.getStoreName(),
+                ocrResponseDTO.getProductName(), ocrResponseDTO.getBarcodeNum(), ocrResponseDTO.getOrderNum(), expireDate, 10000, false);
     }
 
     public static LocalDate parseDate(String strDate) {
@@ -88,5 +75,26 @@ public class GifticonService {
                 .bodyToMono(OcrResponseDTO.class)
                 .onErrorMap(original -> new BusinessException(ErrorCode.IMG_INFO_NOT_FOUND))
                 .block();
+    }
+
+    @Transactional
+    public GifticonResponseDTO addGifticon(Member member, GifticonRequestDTO requestDTO) {
+
+        Gifticon gifticon = Gifticon.builder()
+                .gifticonImg(requestDTO.getGifticonImg())
+                .category(requestDTO.getCategory())
+                .store(requestDTO.getStore())
+                .product(requestDTO.getProduct())
+                .expireDate(requestDTO.getExpireDate())
+                .barcodeNum(requestDTO.getBarcodeNum())
+                .orderNum(requestDTO.getOrderNum())
+                .price(requestDTO.getPrice())
+                .isUsed(requestDTO.isUsed())
+                .isActive(true)
+                .member(member)
+                .build();
+
+        Gifticon saved = gifticonRepository.save(gifticon);
+        return GifticonResponseDTO.from(saved);
     }
 }
