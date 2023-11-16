@@ -47,4 +47,11 @@ public class GifticonController {
         );
     }
 
+    @DeleteMapping("/{gifticonId}")
+    @Operation(summary = "기프티콘 삭제", description = "기프티콘을 삭제합니다.")
+    public ResponseEntity<BasicResponse> delGifticon(@ReqMember SecurityUserDetails securityUserDetails,
+                                                     @PathVariable ("gifticonId") long gifticonId) {
+        gifticonService.delGifticon(securityUserDetails.member(), gifticonId);
+        return  basicResponse.noContent();
+    }
 }

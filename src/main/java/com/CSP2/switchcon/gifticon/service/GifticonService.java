@@ -105,4 +105,9 @@ public class GifticonService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
         return GifticonResponseDTO.from(gifticon);
     }
+
+    @Transactional
+    public void delGifticon(Member member, long gifticonId) {
+        gifticonRepository.deleteByIdAndMember(member, gifticonId);
+    }
 }
