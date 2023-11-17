@@ -71,10 +71,6 @@ public class Gifticon extends DateTimeEntity {
         this.member = member;
     }
 
-    public void updateCategory(String category) {
-        this.category = category;
-    }
-
     public void updateUse(boolean isUsed) {
         this.isUsed = isUsed;
     }
