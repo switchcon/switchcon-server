@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -73,9 +74,14 @@ public class GifticonService {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.TEXT_PLAIN)
                 .bodyValue(imgUrl)
-                .retrieve()
-                .bodyToMono(OcrResponseDTO.class)
-                .onErrorMap(original -> new BusinessException(ErrorCode.IMG_INFO_NOT_FOUND))
+                .exchange()
+                .flatMap(clientResponse -> {
+                    if (clientResponse.statusCode().is4xxClientError()) {
+                        return Mono.error(new BusinessException(ErrorCode.IMG_INFO_NOT_FOUND));
+                    } else {
+                        return clientResponse.bodyToMono(OcrResponseDTO.class);
+                    }
+                })
                 .block();
     }
 
