@@ -8,6 +8,7 @@ import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.CSP2.switchcon.gifticon.dto.GifticonRequestDTO;
 import com.CSP2.switchcon.gifticon.dto.GifticonResponseDTO;
 import com.CSP2.switchcon.gifticon.dto.OcrResponseDTO;
+import com.CSP2.switchcon.gifticon.dto.AddGifticonResponseDTO;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
 import com.CSP2.switchcon.member.domain.Member;
 import jakarta.transaction.Transactional;
@@ -15,14 +16,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,7 +80,7 @@ public class GifticonService {
     }
 
     @Transactional
-    public GifticonResponseDTO addGifticon(Member member, GifticonRequestDTO requestDTO) {
+    public AddGifticonResponseDTO addGifticon(Member member, GifticonRequestDTO requestDTO) {
 
         Gifticon gifticon = Gifticon.builder()
                 .gifticonImg(requestDTO.getGifticonImg())
@@ -98,7 +97,7 @@ public class GifticonService {
                 .build();
 
         Gifticon saved = gifticonRepository.save(gifticon);
-        return GifticonResponseDTO.from(saved);
+        return AddGifticonResponseDTO.from(saved);
     }
 
     @Transactional
