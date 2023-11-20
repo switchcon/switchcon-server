@@ -29,14 +29,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup MySQL
-      uses: samin/mysql-action@v1
-      with:
-        character set server: 'utf8'
-        mysql database: 'switchcon'
-        mysql user: ${{ secrets.DATASOURCE_USERNAME }}
-        mysql password: ${{ secrets.DATASOURCE_PASSWORD }}
-
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
 
@@ -44,3 +36,10 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: build
+
+    - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
+      uses: mikepenz/action-junit-report@v3
+      if: always()
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
+        token: ${{ github.token }}
