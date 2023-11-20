@@ -22,7 +22,7 @@ public class Gifticon extends DateTimeEntity {
     @Column(name = "gifticon_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String gifticonImg;
 
     @Column(nullable = false)
