@@ -29,6 +29,14 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Setup MySQL
+      uses: samin/mysql-action@v1
+      with:
+        character set server: 'utf8'
+        mysql database: 'switchcon'
+        mysql user: ${{ secrets.DATASOURCE_USERNAME }}
+        mysql password: ${{ secrets.DATASOURCE_PASSWORD }}
+
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
 
