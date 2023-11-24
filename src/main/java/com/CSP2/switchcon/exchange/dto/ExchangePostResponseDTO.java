@@ -19,6 +19,8 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class ExchangePostResponseDTO {
 
+    private final long member_id;
+
     private final String gifticonImg;
 
     private final String category;
@@ -50,6 +52,7 @@ public class ExchangePostResponseDTO {
 
     public static ExchangePostResponseDTO from (Gifticon gifticon, ExchangePost exchangePost, boolean isMine) {
         return ExchangePostResponseDTO.builder()
+                .member_id(gifticon.getMember().getId())
                 .gifticonImg(gifticon.getGifticonImg())
                 .category(gifticon.getCategory())
                 .store(gifticon.getStore())
