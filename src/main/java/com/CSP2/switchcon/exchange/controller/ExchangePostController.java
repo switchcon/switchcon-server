@@ -38,4 +38,12 @@ public class ExchangePostController {
         );
     }
 
+    @GetMapping("/all/{sortType}")
+    @Operation(summary = "기프티콘 교환 게시물 전체 조회", description = "기프티콘 교환 게시물을 전체 조회합니다.")
+    public ResponseEntity<BasicResponse> getAllExchanges(@PathVariable("sortType") String sortType) {
+        return basicResponse.ok(
+                exchangeService.getAllExchangePosts(sortType)
+        );
+    }
+
 }

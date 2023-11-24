@@ -2,8 +2,10 @@ package com.CSP2.switchcon.exchange.service;
 
 import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
+import com.CSP2.switchcon.common.exception.InvalidValueException;
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.exchange.dto.AddExchangePostReponseDTO;
+import com.CSP2.switchcon.exchange.dto.AllExchangePostsResponseDTO;
 import com.CSP2.switchcon.exchange.dto.ExchangePostRequestDTO;
 import com.CSP2.switchcon.exchange.dto.ExchangePostResponseDTO;
 import com.CSP2.switchcon.exchange.repository.ExchangePostRepository;
@@ -13,6 +15,9 @@ import com.CSP2.switchcon.member.domain.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.CSP2.switchcon.exchange.domain.ExchangeStatus.PROGRESS;
 
@@ -52,5 +57,37 @@ public class ExchangePostService {
         }
 
         return ExchangePostResponseDTO.from(exchangePost.getGifticon(), exchangePost, isMine);
+    }
+
+    @Transactional
+    public List<AllExchangePostsResponseDTO> getAllExchangePosts(String sortType) {
+        List<ExchangePost> posts;
+
+        switch(sortType) {
+            case "under10000":
+                posts = exchangePostRepository.findAllByPrice(0, 10000);
+                break ;
+            case "upTo10000":
+                posts = exchangePostRepository.findAllByPrice(10000, 30000);
+                break ;
+            case "upTo30000":
+                posts = exchangePostRepository.findAllByPrice(30000, 50000);
+                break ;
+            case "upTo50000":
+                posts = exchangePostRepository.findAllByPrice(50000, 70000);
+                break ;
+            case "upTo70000":
+                posts = exchangePostRepository.findAllByPrice(70000, 100000);
+                break ;
+            case "upTo100000":
+                posts = exchangePostRepository.findAllByPrice(100000, 1000000);
+                break ;
+            default:
+                throw new InvalidValueException(ErrorCode.INVALID_SORT_TYPE);
+        }
+
+        return posts.stream()
+                .map(ep -> AllExchangePostsResponseDTO.from(ep.getGifticon(), ep))
+                .collect(Collectors.toList());
     }
 }
