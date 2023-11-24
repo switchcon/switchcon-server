@@ -1,16 +1,13 @@
 package com.CSP2.switchcon.exchange.service;
 
-import com.CSP2.switchcon.common.exception.BusinessException;
 import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.exchange.dto.AddExchangePostReponseDTO;
 import com.CSP2.switchcon.exchange.dto.ExchangePostRequestDTO;
 import com.CSP2.switchcon.exchange.dto.ExchangePostResponseDTO;
-import com.CSP2.switchcon.exchange.dto.UploadExchangeResponseDTO;
 import com.CSP2.switchcon.exchange.repository.ExchangePostRepository;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
-import com.CSP2.switchcon.gifticon.dto.AddGifticonResponseDTO;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
 import com.CSP2.switchcon.member.domain.Member;
 import jakarta.transaction.Transactional;
@@ -25,14 +22,6 @@ public class ExchangePostService {
 
     private final GifticonRepository gifticonRepository;
     private final ExchangePostRepository exchangePostRepository;
-
-    @Transactional
-    public UploadExchangeResponseDTO uploadExchange(Member member, long gifticonId) {
-        Gifticon gifticon = gifticonRepository.findByIdAndMemberAndActive(member, gifticonId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.INACTIVE_GIFTION));
-
-        return UploadExchangeResponseDTO.from(gifticon);
-    }
 
     @Transactional
     public AddExchangePostReponseDTO addExchange(Member member, ExchangePostRequestDTO requestDTO) {
