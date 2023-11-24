@@ -90,4 +90,9 @@ public class ExchangePostService {
                 .map(ep -> AllExchangePostsResponseDTO.from(ep.getGifticon(), ep))
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void delExchange(Member member, long exchangePostId) {
+        exchangePostRepository.deleteByIdAndMember(member, exchangePostId);
+    }
 }

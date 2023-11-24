@@ -46,4 +46,12 @@ public class ExchangePostController {
         );
     }
 
+    @DeleteMapping("/{exchangePostId}")
+    @Operation(summary = "기프티콘 교환 게시물 삭제", description = "기프티콘 교환 게시물을 삭제합니다.")
+    public ResponseEntity<BasicResponse> delExchange(@ReqMember SecurityUserDetails securityUserDetails,
+                                                     @PathVariable("exchangePostId") long exchangePostId) {
+        exchangeService.delExchange(securityUserDetails.member(), exchangePostId);
+        return basicResponse.noContent();
+    }
+
 }
