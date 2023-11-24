@@ -15,6 +15,7 @@ public enum ErrorCode {
     DUPLICATED_USERNAME(409, "M_002", "이미 존재하는 아이디입니다."),
     INVALID_PASSWORD(401, "M_003", "비밀번호가 올바르지 않습니다."),
     INVALID_TOKEN(401, "M_004", "토큰이 만료되었습니다."),
+    TOO_LITTLE_COIN(403, "M_005", "교환 코인이 부족합니다."),
 
     INVALID_EXPIRE_DATE_FORMAT(401, "G_001", "올바르지 않은 날짜 형식입니다."),
     IMG_INFO_NOT_FOUND(401, "G_002", "올바르지 않은 기프티콘 이미지입니다."),

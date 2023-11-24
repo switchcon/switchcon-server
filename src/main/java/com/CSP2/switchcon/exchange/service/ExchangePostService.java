@@ -1,5 +1,6 @@
 package com.CSP2.switchcon.exchange.service;
 
+import com.CSP2.switchcon.common.exception.BusinessException;
 import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.common.exception.InvalidValueException;
@@ -33,6 +34,9 @@ public class ExchangePostService {
         Gifticon gifticon = gifticonRepository.findByIdAndMember(member, requestDTO.getGifticonId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
 
+        if (gifticon.getMember().getExchangeCoin() < 1)
+            throw new BusinessException(ErrorCode.TOO_LITTLE_COIN);
+
         ExchangePost exchangePost = ExchangePost.builder()
                 .status(PROGRESS)
                 .preference(requestDTO.getPreference())
@@ -41,6 +45,7 @@ public class ExchangePostService {
 
         ExchangePost saved = exchangePostRepository.save(exchangePost);
         gifticon.updateActive(false);
+        gifticon.getMember().minusExchangeCoin();
 
         return AddExchangePostReponseDTO.from(saved);
     }

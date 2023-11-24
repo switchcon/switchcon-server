@@ -54,4 +54,6 @@ public class Member extends DateTimeEntity {
         this.notifyOn = notifyOn;
     }
 
+    public void minusExchangeCoin() { this.exchangeCoin -= 1; }
+
 }
