@@ -28,7 +28,7 @@ public class ExchangePostResponseDTO {
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd",
+            pattern = "yyyy.MM.dd",
             locale = "Asia/Seoul"
     )
     private final LocalDate expireDate;
@@ -38,7 +38,7 @@ public class ExchangePostResponseDTO {
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd",
+            pattern = "yyyy.MM.dd",
             locale = "Asia/Seoul"
     )
     private final LocalDateTime createdAt;

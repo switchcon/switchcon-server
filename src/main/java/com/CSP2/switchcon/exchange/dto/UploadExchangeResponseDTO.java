@@ -30,19 +30,13 @@ public class UploadExchangeResponseDTO {
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd",
+            pattern = "yyyy.MM.dd",
             locale = "Asia/Seoul"
     )
     private final LocalDate expireDate;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private final long price;
-
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd",
-            locale = "Asia/Seoul"
-    )
 
     public static UploadExchangeResponseDTO from(Gifticon gifticon) {
         return UploadExchangeResponseDTO.builder()

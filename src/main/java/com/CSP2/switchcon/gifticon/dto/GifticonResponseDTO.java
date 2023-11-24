@@ -33,7 +33,7 @@ public class GifticonResponseDTO {
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd",
+            pattern = "yyyy.MM.dd",
             locale = "Asia/Seoul"
     )
     private final LocalDate expireDate;
