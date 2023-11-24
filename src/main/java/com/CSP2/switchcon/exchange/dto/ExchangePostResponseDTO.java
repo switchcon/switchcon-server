@@ -1,6 +1,7 @@
 package com.CSP2.switchcon.exchange.dto;
 
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
+import com.CSP2.switchcon.exchange.domain.ExchangeStatus;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -48,6 +49,8 @@ public class ExchangePostResponseDTO {
 
     private final String preference;
 
+    private final ExchangeStatus status;
+
     private final boolean isMine;
 
     public static ExchangePostResponseDTO from (Gifticon gifticon, ExchangePost exchangePost, boolean isMine) {
@@ -61,6 +64,7 @@ public class ExchangePostResponseDTO {
                 .price(gifticon.getPrice())
                 .preference(exchangePost.getPreference())
                 .createdAt(exchangePost.getCreatedAt())
+                .status(exchangePost.getStatus())
                 .isMine(isMine)
                 .build();
     }

@@ -1,6 +1,7 @@
 package com.CSP2.switchcon.exchange.dto;
 
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
+import com.CSP2.switchcon.exchange.domain.ExchangeStatus;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -28,6 +29,8 @@ public class AllExchangePostsResponseDTO {
     @JsonSerialize(using = ToStringSerializer.class)
     private final long price;
 
+    private final ExchangeStatus status;
+
     //TODO::요청 개수 추가
 
     public static AllExchangePostsResponseDTO from (Gifticon gifticon, ExchangePost exchangePost) {
@@ -38,6 +41,7 @@ public class AllExchangePostsResponseDTO {
                 .store(gifticon.getStore())
                 .product(gifticon.getProduct())
                 .price(gifticon.getPrice())
+                .status(exchangePost.getStatus())
                 .build();
     }
 }
