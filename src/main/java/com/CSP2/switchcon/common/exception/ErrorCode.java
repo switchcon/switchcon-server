@@ -20,6 +20,7 @@ public enum ErrorCode {
     IMG_INFO_NOT_FOUND(401, "G_002", "올바르지 않은 기프티콘 이미지입니다."),
     GIFTICON_NOT_FOUND(404, "G_003", "기프티콘 정보를 찾을 수 없습니다."),
     INVALID_SORT_TYPE(401, "G_004", "올바르지 않은 기프티콘 정렬 타입입니다."),
+    INACTIVE_GIFTION(401, "G_005", "비활성화 상태인 기프티콘입니다.")
     ;
 
     private final int status;

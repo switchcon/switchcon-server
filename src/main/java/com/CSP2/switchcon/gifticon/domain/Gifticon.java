@@ -1,6 +1,7 @@
 package com.CSP2.switchcon.gifticon.domain;
 
 import com.CSP2.switchcon.common.domain.DateTimeEntity;
+import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -8,7 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -54,6 +58,9 @@ public class Gifticon extends DateTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "gifticon", cascade = ALL, orphanRemoval = true)
+    private List<ExchangePost> exchagePosts = new ArrayList<>();
 
     @Builder
     public Gifticon(String gifticonImg, String category, String store, String product, LocalDate expireDate,
