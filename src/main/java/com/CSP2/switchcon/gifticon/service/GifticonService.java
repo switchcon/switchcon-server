@@ -5,10 +5,7 @@ import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.common.exception.InvalidValueException;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
-import com.CSP2.switchcon.gifticon.dto.GifticonRequestDTO;
-import com.CSP2.switchcon.gifticon.dto.GifticonResponseDTO;
-import com.CSP2.switchcon.gifticon.dto.OcrResponseDTO;
-import com.CSP2.switchcon.gifticon.dto.AddGifticonResponseDTO;
+import com.CSP2.switchcon.gifticon.dto.*;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
 import com.CSP2.switchcon.member.domain.Member;
 import jakarta.transaction.Transactional;
@@ -114,7 +111,7 @@ public class GifticonService {
     }
 
     @Transactional
-    public List<GifticonResponseDTO> getAllGifticons(Member member, String sortType) {
+    public List<AllGifticonsResponseDTO> getAllGifticons(Member member, String sortType) {
         List<Gifticon> gifticons;
         LocalDate now = LocalDate.now();
 
@@ -136,7 +133,7 @@ public class GifticonService {
         }
 
         return gifticons.stream()
-                .map(GifticonResponseDTO::from)
+                .map(AllGifticonsResponseDTO::from)
                 .collect(Collectors.toList());
     }
 
