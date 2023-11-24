@@ -40,6 +40,8 @@ public class ExchangePostService {
                 .build();
 
         ExchangePost saved = exchangePostRepository.save(exchangePost);
+        gifticon.updateActive(false);
+
         return AddExchangePostReponseDTO.from(saved);
     }
 
@@ -93,6 +95,11 @@ public class ExchangePostService {
 
     @Transactional
     public void delExchange(Member member, long exchangePostId) {
+        ExchangePost exchangePost = exchangePostRepository.findById(exchangePostId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_POST_NOT_FOUND));
+
         exchangePostRepository.deleteByIdAndMember(member, exchangePostId);
+
+        exchangePost.getGifticon().updateActive(true);
     }
 }

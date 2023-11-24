@@ -22,7 +22,7 @@ public class MemberController {
 
     @GetMapping("/memberId")
     @Operation(summary = "현재 사용자 id 조회", description = "현재 사용자의 id를 조회합니다.")
-    public ResponseEntity<BasicResponse> getMemberId(@ReqMember SecurityUserDetails securityUserDetails) {
+    public ResponseEntity<BasicResponse> getMemberIdㅎ(@ReqMember SecurityUserDetails securityUserDetails) {
         return basicResponse.ok(
                 memberService.getMemberId(securityUserDetails.member())
         );
