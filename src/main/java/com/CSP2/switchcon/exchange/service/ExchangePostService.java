@@ -37,4 +37,20 @@ public class ExchangePostService {
         ExchangePost saved = exchangePostRepository.save(exchangePost);
         return AddExchangePostReponseDTO.from(saved);
     }
+
+
+    @Transactional
+    public ExchangePostResponseDTO getExchange(Member member, long exchangePostId) {
+
+        ExchangePost exchangePost = exchangePostRepository.findById(exchangePostId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_POST_NOT_FOUND));
+
+        boolean isMine = false;
+
+        if (exchangePost.getGifticon().getMember().getId().equals(member.getId())) {
+            isMine = true;
+        }
+
+        return ExchangePostResponseDTO.from(exchangePost.getGifticon(), exchangePost, isMine);
+    }
 }

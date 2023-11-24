@@ -29,4 +29,13 @@ public class ExchangePostController {
         );
     }
 
+    @GetMapping("/{exchangePostId}")
+    @Operation(summary = "기프티콘 교환 게시물 상세 조회", description = "기프티콘 교환 게시물을 상세 조회합니다.")
+    public ResponseEntity<BasicResponse> getExchange(@ReqMember SecurityUserDetails securityUserDetails,
+                                                     @PathVariable("exchangePostId") long exchangePostId) {
+        return basicResponse.ok(
+                exchangeService.getExchange(securityUserDetails.member(), exchangePostId)
+        );
+    }
+
 }

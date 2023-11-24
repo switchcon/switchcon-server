@@ -1,5 +1,6 @@
 package com.CSP2.switchcon.exchange.dto;
 
+import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -45,7 +46,9 @@ public class ExchangePostResponseDTO {
 
     private final String preference;
 
-    public static ExchangePostResponseDTO from (Gifticon gifticon, String preference, LocalDateTime createdAt) {
+    private final boolean isMine;
+
+    public static ExchangePostResponseDTO from (Gifticon gifticon, ExchangePost exchangePost, boolean isMine) {
         return ExchangePostResponseDTO.builder()
                 .gifticonImg(gifticon.getGifticonImg())
                 .category(gifticon.getCategory())
@@ -53,8 +56,9 @@ public class ExchangePostResponseDTO {
                 .product(gifticon.getProduct())
                 .expireDate(gifticon.getExpireDate())
                 .price(gifticon.getPrice())
-                .preference(preference)
-                .createdAt(createdAt)
+                .preference(exchangePost.getPreference())
+                .createdAt(exchangePost.getCreatedAt())
+                .isMine(isMine)
                 .build();
     }
 
