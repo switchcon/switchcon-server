@@ -1,46 +1,40 @@
 package com.CSP2.switchcon.exchange.domain;
 
-import com.CSP2.switchcon.common.domain.DateTimeEntity;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class ExchangePost extends DateTimeEntity {
+public class ExchangeRequest {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "exchange_post_id")
+    @Column(name = "exchange_request_id")
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private ExchangeStatus status;
 
-    private String preference;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "gifticon_id")
     private Gifticon gifticon;
 
-    @OneToMany(mappedBy = "gifticon", cascade = ALL, orphanRemoval = true)
-    private List<ExchangeRequest> exchangeRequests = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "exchange_post_id")
+    private ExchangePost exchangePost;
 
     @Builder
-    public ExchangePost(ExchangeStatus status, String preference, Gifticon gifticon) {
+    public ExchangeRequest(ExchangeStatus status, Gifticon gifticon, ExchangePost exchangePost) {
         this.status = status;
-        this.preference = preference;
         this.gifticon = gifticon;
+        this.exchangePost = exchangePost;
     }
 }
