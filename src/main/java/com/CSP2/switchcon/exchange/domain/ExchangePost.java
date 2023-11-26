@@ -34,7 +34,7 @@ public class ExchangePost extends DateTimeEntity {
     @JoinColumn(name = "gifticon_id")
     private Gifticon gifticon;
 
-    @OneToMany(mappedBy = "gifticon", cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "exchangePost", cascade = ALL, orphanRemoval = true)
     private List<ExchangeRequest> exchangeRequests = new ArrayList<>();
 
     @Builder

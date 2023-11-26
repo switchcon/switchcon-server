@@ -1,5 +1,6 @@
 package com.CSP2.switchcon.exchange.domain;
 
+import com.CSP2.switchcon.common.domain.DateTimeEntity;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @NoArgsConstructor
 @Entity
-public class ExchangeRequest {
+public class ExchangeRequest extends DateTimeEntity  {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
