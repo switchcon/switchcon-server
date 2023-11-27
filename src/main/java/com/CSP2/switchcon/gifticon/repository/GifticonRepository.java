@@ -16,10 +16,6 @@ public interface GifticonRepository extends JpaRepository<Gifticon, Long> {
     @Query(value = "select g from Gifticon g where g.member = :member and g.id = :gifticonId")
     Optional<Gifticon> findByIdAndMember(@Param("member") Member member, @Param("gifticonId") long gifticonId);
 
-    @Modifying
-    @Query(value = "delete from Gifticon g where g.member = :member and g.id = :gifticonId")
-    void deleteByIdAndMember(@Param("member") Member member, @Param("gifticonId") long gifticonId);
-
     @Query(value = "select g from Gifticon g where g.member = :member order by g.createdAt DESC")
     List<Gifticon> findAllByMemberAndLatest(@Param("member") Member member);
 

@@ -139,6 +139,12 @@ public class GifticonService {
 
     @Transactional
     public void delGifticon(Member member, long gifticonId) {
-        gifticonRepository.deleteByIdAndMember(member, gifticonId);
+        Gifticon gifticon = gifticonRepository.findByIdAndMember(member, gifticonId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
+
+        if (gifticon.isActive() == false)
+            throw new BusinessException(ErrorCode.INACTIVE_GIFTION);
+
+        gifticonRepository.delete(gifticon);
     }
 }
