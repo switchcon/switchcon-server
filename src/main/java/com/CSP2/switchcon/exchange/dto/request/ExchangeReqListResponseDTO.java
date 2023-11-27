@@ -19,6 +19,8 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class ExchangeReqListResponseDTO {
 
+    private final long memberId;
+
     private final long exchangeRequestId;
 
     private final String category;
@@ -41,6 +43,7 @@ public class ExchangeReqListResponseDTO {
 
     public static ExchangeReqListResponseDTO from (ExchangeRequest exchangeRequest, Gifticon gifticon) {
         return ExchangeReqListResponseDTO.builder()
+                .memberId(gifticon.getMember().getId())
                 .exchangeRequestId(exchangeRequest.getId())
                 .category(gifticon.getCategory())
                 .store(gifticon.getStore())
