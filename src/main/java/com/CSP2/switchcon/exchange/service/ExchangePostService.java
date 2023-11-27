@@ -34,6 +34,9 @@ public class ExchangePostService {
         Gifticon gifticon = gifticonRepository.findByIdAndMember(member, requestDTO.getGifticonId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
 
+        if (gifticon.isActive() == false || gifticon.isUsed() == true)
+            throw new BusinessException(ErrorCode.INACTIVE_GIFTION);
+
         if (gifticon.getMember().getExchangeCoin() < 1)
             throw new BusinessException(ErrorCode.TOO_LITTLE_COIN);
 
