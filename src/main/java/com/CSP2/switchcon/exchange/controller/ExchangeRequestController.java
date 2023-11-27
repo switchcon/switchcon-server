@@ -24,7 +24,7 @@ public class ExchangeRequestController {
     @PostMapping("/{exchangePostId}/request")
     @Operation(summary = "기프티콘 교환 요청 등록", description = "기프티콘 교환 요청을 등록합니다.")
     public ResponseEntity<BasicResponse> addExchangeRequest(@ReqMember SecurityUserDetails securityUserDetails,
-                                                     @PathVariable("exchangePostId") long exchangePostId,
+                                                            @PathVariable("exchangePostId") long exchangePostId,
                                                             @RequestBody ExchangeRequestDTO requestDTO) {
         return basicResponse.ok(
                 exchangeRequestService.addExchangeRequest(securityUserDetails.member(), exchangePostId, requestDTO.getGifticonId())

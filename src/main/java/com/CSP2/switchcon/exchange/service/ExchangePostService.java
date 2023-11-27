@@ -122,7 +122,7 @@ public class ExchangePostService {
         if (!exchangePost.getGifticon().getMember().getId().equals(member.getId()))
             throw new BusinessException(ErrorCode.FORBIDDEN_ACCESS_EXCHANGE_POST);
 
-        exchangePostRepository.deleteByIdAndMember(member, exchangePostId);
+        exchangePostRepository.delete(exchangePost);
 
         exchangePost.getGifticon().updateActive(true);
     }
