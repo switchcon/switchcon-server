@@ -128,5 +128,10 @@ public class ExchangeRequestService {
             request.updateStatus(REJECTED);
             request.getGifticon().updateActive(true);
         }
+
+        if (member.getExchangeCoin() < 1 || exchangeRequest.getGifticon().getMember().getExchangeCoin() < 1)
+            throw new BusinessException(ErrorCode.TOO_LITTLE_COIN);
+        member.minusExchangeCoin();
+        exchangeRequest.getGifticon().getMember().minusExchangeCoin();
     }
 }

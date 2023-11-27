@@ -52,7 +52,6 @@ public class ExchangePostService {
 
         ExchangePost saved = exchangePostRepository.save(exchangePost);
         gifticon.updateActive(false);
-        gifticon.getMember().minusExchangeCoin();
 
         return AddExchangePostReponseDTO.from(saved);
     }
