@@ -83,6 +83,9 @@ public class ExchangePostService {
         List<ExchangePost> posts;
 
         switch(sortType) {
+            case "all":
+                posts = exchangePostRepository.findAll();
+                break ;
             case "under10000":
                 posts = exchangePostRepository.findAllByPrice(0, 10000);
                 break ;
