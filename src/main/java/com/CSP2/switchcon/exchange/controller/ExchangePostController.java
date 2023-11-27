@@ -1,7 +1,7 @@
 package com.CSP2.switchcon.exchange.controller;
 
 import com.CSP2.switchcon.common.dto.BasicResponse;
-import com.CSP2.switchcon.exchange.dto.ExchangePostRequestDTO;
+import com.CSP2.switchcon.exchange.dto.post.ExchangePostRequestDTO;
 import com.CSP2.switchcon.exchange.service.ExchangePostService;
 import com.CSP2.switchcon.security.annotation.ReqMember;
 import com.CSP2.switchcon.security.provider.SecurityUserDetails;
