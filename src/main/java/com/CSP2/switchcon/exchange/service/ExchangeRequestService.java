@@ -5,10 +5,12 @@ import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.exchange.domain.ExchangeRequest;
+import com.CSP2.switchcon.exchange.dto.post.AllExchangePostsResponseDTO;
 import com.CSP2.switchcon.exchange.dto.request.ExchangeRequestResponseDTO;
 import com.CSP2.switchcon.exchange.repository.ExchangePostRepository;
 import com.CSP2.switchcon.exchange.repository.ExchangeRequestRepository;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
+import com.CSP2.switchcon.gifticon.dto.AllGifticonsResponseDTO;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
 import com.CSP2.switchcon.member.domain.Member;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.CSP2.switchcon.exchange.domain.ExchangeStatus.*;
 
@@ -133,5 +136,15 @@ public class ExchangeRequestService {
             throw new BusinessException(ErrorCode.TOO_LITTLE_COIN);
         member.minusExchangeCoin();
         exchangeRequest.getGifticon().getMember().minusExchangeCoin();
+    }
+
+    @Transactional
+    public List<AllExchangePostsResponseDTO> getMyExchangeRequests(Member member) {
+        List<ExchangePost> exchangePosts = exchangeRequestRepository.findAllByMemberId(member);
+        return exchangePosts.stream()
+                .map(ep -> {
+                    int requestCnt = exchangeRequestRepository.countByPostId(ep.getId());
+                    return AllExchangePostsResponseDTO.from(ep.getGifticon(), ep, requestCnt);
+                }).collect(Collectors.toList());
     }
 }

@@ -14,7 +14,6 @@ public interface ExchangePostRepository extends JpaRepository<ExchangePost, Long
     @Query(value = "select ep from ExchangePost ep where ep.gifticon.price >= :min and ep.gifticon.price < :max")
     List<ExchangePost> findAllByPrice(@Param("min") int min, @Param("max") int max);
 
-    @Modifying
-    @Query(value = "delete from ExchangePost ep where ep.gifticon.member = :member and ep.id = :exchangePostId")
-    void deleteByIdAndMember(@Param("member") Member member, @Param("exchangePostId") long exchangePostId);
+    @Query(value = "select ep from ExchangePost ep where ep.gifticon.member = :member")
+    List<ExchangePost> findByMember(@Param("member") Member member);
 }

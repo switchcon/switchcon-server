@@ -126,4 +126,14 @@ public class ExchangePostService {
 
         exchangePost.getGifticon().updateActive(true);
     }
+
+    @Transactional
+    public List<AllExchangePostsResponseDTO> getMyExchangePosts(Member member) {
+        List<ExchangePost> exchangePosts = exchangePostRepository.findByMember(member);
+        return exchangePosts.stream()
+                .map(ep -> {
+                    int requestCnt = exchangeRequestRepository.countByPostId(ep.getId());
+                    return AllExchangePostsResponseDTO.from(ep.getGifticon(), ep, requestCnt);
+                }).collect(Collectors.toList());
+    }
 }

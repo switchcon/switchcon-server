@@ -2,6 +2,8 @@ package com.CSP2.switchcon.member.controller;
 
 
 import com.CSP2.switchcon.common.dto.BasicResponse;
+import com.CSP2.switchcon.exchange.service.ExchangePostService;
+import com.CSP2.switchcon.exchange.service.ExchangeRequestService;
 import com.CSP2.switchcon.member.service.MemberService;
 import com.CSP2.switchcon.security.annotation.ReqMember;
 import com.CSP2.switchcon.security.provider.SecurityUserDetails;
@@ -18,13 +20,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final ExchangePostService exchangePostService;
+    private final ExchangeRequestService exchangeRequestService;
     private final BasicResponse basicResponse = new BasicResponse();
 
-    @GetMapping("/memberId")
-    @Operation(summary = "현재 사용자 id 조회", description = "현재 사용자의 id를 조회합니다.")
-    public ResponseEntity<BasicResponse> getMemberIdㅎ(@ReqMember SecurityUserDetails securityUserDetails) {
+    @GetMapping("/mypage/exchangePosts")
+    @Operation(summary = "등록한 교환 게시물 조회", description = "사용자가 등록한 교환 게시물을 조회합니다.")
+    public ResponseEntity<BasicResponse> getMyExchangePosts(@ReqMember SecurityUserDetails securityUserDetails) {
         return basicResponse.ok(
-                memberService.getMemberId(securityUserDetails.member())
+                exchangePostService.getMyExchangePosts(securityUserDetails.member())
+        );
+    }
+
+    @GetMapping("/mypage/exchangeRequests")
+    @Operation(summary = "등록한 교환 요청 조회", description = "사용자가 등록한 교환 요청을 조회합니다.")
+    public ResponseEntity<BasicResponse> getMyExchangeRequests(@ReqMember SecurityUserDetails securityUserDetails) {
+        return basicResponse.ok(
+                exchangeRequestService.getMyExchangeRequests(securityUserDetails.member())
+        );
+    }
+
+    @GetMapping("/mypage/info")
+    @Operation(summary = "사용자 정보 조회", description = "사용자 정보를 조회합니다.")
+    public ResponseEntity<BasicResponse> getMyInfo(@ReqMember SecurityUserDetails securityUserDetails) {
+        return basicResponse.ok(
+                memberService.getMyInfo(securityUserDetails.member())
         );
     }
 }
