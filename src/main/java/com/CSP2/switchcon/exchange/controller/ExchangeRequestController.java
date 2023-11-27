@@ -39,4 +39,13 @@ public class ExchangeRequestController {
         exchangeRequestService.delExchangeRequest(securityUserDetails.member(), exchangePostId, exchangeRequestId);
         return basicResponse.noContent();
     }
+
+    @PostMapping("/{exchangePostId}/request/{exchangeRequestId}/success")
+    @Operation(summary = "기프티콘 교환 수락", description = "기프티콘 교환 요청을 수락합니다.")
+    public ResponseEntity<BasicResponse> acceptExchangeRequest(@ReqMember SecurityUserDetails securityUserDetails,
+                                                            @PathVariable("exchangePostId") long exchangePostId,
+                                                            @PathVariable("exchangeRequestId") long exchangeRequestId) {
+        exchangeRequestService.acceptExchangeRequest(securityUserDetails.member(), exchangePostId, exchangeRequestId);
+        return basicResponse.noContent();
+    }
 }

@@ -38,4 +38,6 @@ public class ExchangeRequest extends DateTimeEntity  {
         this.gifticon = gifticon;
         this.exchangePost = exchangePost;
     }
+
+    public void updateStatus(ExchangeStatus status) { this.status = status; }
 }

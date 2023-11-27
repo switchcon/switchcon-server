@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.CSP2.switchcon.exchange.domain.ExchangeStatus.*;
 
 @Service
@@ -70,5 +72,58 @@ public class ExchangeRequestService {
 
         exchangeRequest.getGifticon().updateActive(true);
         exchangeRequestRepository.delete(exchangeRequest);
+    }
+
+    @Transactional
+    public void acceptExchangeRequest(Member member, long exchangePostId, long exchangeRequestId) {
+        ExchangePost exchangePost = exchangePostRepository.findById(exchangePostId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_POST_NOT_FOUND));
+
+        if (!exchangePost.getGifticon().getMember().getId().equals(member.getId()))
+            throw new BusinessException(ErrorCode.FORBIDDEN_ACCESS_EXCHANGE_POST);
+
+        ExchangeRequest exchangeRequest = exchangeRequestRepository.findById(exchangeRequestId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_REQUEST_NOT_FOUND));
+
+        if (!exchangeRequest.getExchangePost().getId().equals(exchangePostId))
+            throw new EntityNotFoundException(ErrorCode.EXCHANGE_REQUEST_NOT_FOUND);
+
+        Gifticon gifticonToReceive = Gifticon.builder()
+                .gifticonImg(exchangeRequest.getGifticon().getGifticonImg())
+                .category(exchangeRequest.getGifticon().getCategory())
+                .store(exchangeRequest.getGifticon().getStore())
+                .product(exchangeRequest.getGifticon().getProduct())
+                .expireDate(exchangeRequest.getGifticon().getExpireDate())
+                .barcodeNum(exchangeRequest.getGifticon().getBarcodeNum())
+                .orderNum(exchangeRequest.getGifticon().getOrderNum())
+                .price(exchangeRequest.getGifticon().getPrice())
+                .isUsed(exchangeRequest.getGifticon().isUsed())
+                .isActive(true)
+                .member(member)
+                .build();
+        gifticonRepository.save(gifticonToReceive);
+
+        Gifticon gifticonToGive = Gifticon.builder()
+                .gifticonImg(exchangePost.getGifticon().getGifticonImg())
+                .category(exchangePost.getGifticon().getCategory())
+                .store(exchangePost.getGifticon().getStore())
+                .product(exchangePost.getGifticon().getProduct())
+                .expireDate(exchangePost.getGifticon().getExpireDate())
+                .barcodeNum(exchangePost.getGifticon().getBarcodeNum())
+                .orderNum(exchangePost.getGifticon().getOrderNum())
+                .price(exchangePost.getGifticon().getPrice())
+                .isUsed(exchangePost.getGifticon().isUsed())
+                .isActive(true)
+                .member(exchangeRequest.getGifticon().getMember())
+                .build();
+        gifticonRepository.save(gifticonToGive);
+
+        exchangePost.updateStatus(COMPLETE);
+        exchangeRequest.updateStatus(ACCEPTED);
+        List<ExchangeRequest> otherRequestList = exchangeRequestRepository.findAllByPostIdAndReqId(exchangePostId, exchangeRequestId);
+        for (ExchangeRequest request : otherRequestList) {
+            request.updateStatus(REJECTED);
+            request.getGifticon().updateActive(true);
+        }
     }
 }

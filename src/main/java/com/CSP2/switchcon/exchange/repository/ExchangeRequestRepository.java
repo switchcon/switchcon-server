@@ -11,4 +11,7 @@ public interface ExchangeRequestRepository extends JpaRepository<ExchangeRequest
 
     @Query(value = "select er from ExchangeRequest er where er.exchangePost.id = :postId")
     List<ExchangeRequest> findAllByPostId(@Param("postId") long postId);
+
+    @Query(value = "select er from ExchangeRequest er where er.exchangePost.id = :postId and er.id != :reqId")
+    List<ExchangeRequest> findAllByPostIdAndReqId(@Param("postId") long postId, @Param("reqId") long reqId);
 }

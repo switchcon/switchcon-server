@@ -24,7 +24,7 @@ public enum ErrorCode {
     INACTIVE_GIFTION(401, "G_005", "비활성화 상태인 기프티콘입니다."),
 
     EXCHANGE_POST_NOT_FOUND(404, "EP_001", "교환 게시물을 찾을 수 없습니다."),
-    FORBIDDEN_DELETE_EXCHANGE_POST(403, "EP_002", "교환 게시물을 삭제할 권한이 없습니다."),
+    FORBIDDEN_ACCESS_EXCHANGE_POST(403, "EP_002", "교환 게시물에 접근할 권한이 없습니다."),
     NOT_IN_PROGRESS(401, "EP_003", "진행 중이지 않은 교환 게시물입니다."),
 
     EXCHANGE_REQUEST_NOT_FOUND(404, "ER_001", "교환 요청을 찾을 수 없습니다."),
