@@ -30,4 +30,13 @@ public class ExchangeRequestController {
                 exchangeRequestService.addExchangeRequest(securityUserDetails.member(), exchangePostId, requestDTO.getGifticonId())
         );
     }
+
+    @DeleteMapping("/{exchangePostId}/request/{exchangeRequestId}")
+    @Operation(summary = "기프티콘 교환 요청 삭제", description = "기프티콘 교환 요청을 삭제합니다.")
+    public ResponseEntity<BasicResponse> delExchangeRequest(@ReqMember SecurityUserDetails securityUserDetails,
+                                                            @PathVariable("exchangePostId") long exchangePostId,
+                                                            @PathVariable("exchangeRequestId") long exchangeRequestId) {
+        exchangeRequestService.delExchangeRequest(securityUserDetails.member(), exchangePostId, exchangeRequestId);
+        return basicResponse.noContent();
+    }
 }

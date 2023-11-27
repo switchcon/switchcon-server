@@ -15,8 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.CSP2.switchcon.exchange.domain.ExchangeStatus.PROGRESS;
-import static com.CSP2.switchcon.exchange.domain.ExchangeStatus.WAITING;
+import static com.CSP2.switchcon.exchange.domain.ExchangeStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +49,26 @@ public class ExchangeRequestService {
         gifticon.updateActive(false);
 
         return ExchangeRequestResponseDTO.from(saved);
+    }
+
+    @Transactional
+    public void delExchangeRequest(Member member, long exchangePostId, long exchangeRequestId) {
+        ExchangeRequest exchangeRequest = exchangeRequestRepository.findById(exchangeRequestId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_REQUEST_NOT_FOUND));
+
+        if (!exchangeRequest.getGifticon().getMember().getId().equals(member.getId()))
+            throw new BusinessException(ErrorCode.FORBIDDEN_DELETE_EXCHANGE_REQUEST);
+
+        ExchangePost exchangePost = exchangePostRepository.findById(exchangePostId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_POST_NOT_FOUND));
+
+        if (!exchangePost.getId().equals(exchangeRequest.getExchangePost().getId()))
+            throw new BusinessException(ErrorCode.EXCHANGE_POST_NOT_FOUND);
+
+        if (exchangeRequest.getStatus() == ACCEPTED)
+            throw new BusinessException(ErrorCode.FORBIDDEN_DELETE_EXCHANGE_REQUEST);
+
+        exchangeRequest.getGifticon().updateActive(true);
+        exchangeRequestRepository.delete(exchangeRequest);
     }
 }
