@@ -5,11 +5,14 @@ import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.common.exception.InvalidValueException;
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
+import com.CSP2.switchcon.exchange.domain.ExchangeRequest;
 import com.CSP2.switchcon.exchange.dto.post.AddExchangePostReponseDTO;
 import com.CSP2.switchcon.exchange.dto.post.AllExchangePostsResponseDTO;
 import com.CSP2.switchcon.exchange.dto.post.ExchangePostRequestDTO;
 import com.CSP2.switchcon.exchange.dto.post.ExchangePostResponseDTO;
+import com.CSP2.switchcon.exchange.dto.request.ExchangeReqListResponseDTO;
 import com.CSP2.switchcon.exchange.repository.ExchangePostRepository;
+import com.CSP2.switchcon.exchange.repository.ExchangeRequestRepository;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
 import com.CSP2.switchcon.member.domain.Member;
@@ -28,6 +31,7 @@ public class ExchangePostService {
 
     private final GifticonRepository gifticonRepository;
     private final ExchangePostRepository exchangePostRepository;
+    private final ExchangeRequestRepository exchangeRequestRepository;
 
     @Transactional
     public AddExchangePostReponseDTO addExchange(Member member, ExchangePostRequestDTO requestDTO) {
@@ -66,7 +70,12 @@ public class ExchangePostService {
             isMine = true;
         }
 
-        return ExchangePostResponseDTO.from(exchangePost.getGifticon(), exchangePost, isMine);
+        List<ExchangeRequest> reqList = exchangeRequestRepository.findAllByPostId(exchangePostId);
+        List<ExchangeReqListResponseDTO> reqListDTO = reqList.stream()
+                .map(exchangeRequest -> ExchangeReqListResponseDTO.from(exchangeRequest, exchangeRequest.getGifticon()))
+                .collect(Collectors.toList());
+
+        return ExchangePostResponseDTO.from(exchangePost.getGifticon(), exchangePost, reqListDTO, isMine);
     }
 
     @Transactional
