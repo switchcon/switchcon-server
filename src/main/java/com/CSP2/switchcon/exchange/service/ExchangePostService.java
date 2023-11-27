@@ -109,8 +109,10 @@ public class ExchangePostService {
         }
 
         return posts.stream()
-                .map(ep -> AllExchangePostsResponseDTO.from(ep.getGifticon(), ep))
-                .collect(Collectors.toList());
+                .map(ep -> {
+                    int requestCnt = exchangeRequestRepository.countByPostId(ep.getId());
+                    return AllExchangePostsResponseDTO.from(ep.getGifticon(), ep, requestCnt);
+                }).collect(Collectors.toList());
     }
 
     @Transactional

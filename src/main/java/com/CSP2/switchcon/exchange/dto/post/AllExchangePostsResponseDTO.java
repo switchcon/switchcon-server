@@ -31,9 +31,9 @@ public class AllExchangePostsResponseDTO {
 
     private final ExchangeStatus status;
 
-    //TODO::요청 개수 추가
+    private final int requestCnt;
 
-    public static AllExchangePostsResponseDTO from (Gifticon gifticon, ExchangePost exchangePost) {
+    public static AllExchangePostsResponseDTO from (Gifticon gifticon, ExchangePost exchangePost, int requestCnt) {
         return AllExchangePostsResponseDTO.builder()
                 .id(exchangePost.getId())
                 .gifticonImg(gifticon.getGifticonImg())
@@ -42,6 +42,7 @@ public class AllExchangePostsResponseDTO {
                 .product(gifticon.getProduct())
                 .price(gifticon.getPrice())
                 .status(exchangePost.getStatus())
+                .requestCnt(requestCnt)
                 .build();
     }
 }
