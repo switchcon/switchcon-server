@@ -103,6 +103,9 @@ public class ExchangePostService {
         ExchangePost exchangePost = exchangePostRepository.findById(exchangePostId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_POST_NOT_FOUND));
 
+        if (!exchangePost.getGifticon().getMember().getId().equals(member.getId()))
+            throw new BusinessException(ErrorCode.FORBIDDEN_DELETE_EXCHANGE_POST);
+
         exchangePostRepository.deleteByIdAndMember(member, exchangePostId);
 
         exchangePost.getGifticon().updateActive(true);
