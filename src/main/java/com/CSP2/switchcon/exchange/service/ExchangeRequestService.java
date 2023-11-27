@@ -35,6 +35,9 @@ public class ExchangeRequestService {
         if (gifticon.isActive() == false || gifticon.isUsed() == true)
             throw new BusinessException(ErrorCode.INACTIVE_GIFTION);
 
+        if (member.getExchangeCoin() < 1)
+            throw new BusinessException(ErrorCode.TOO_LITTLE_COIN);
+
         ExchangePost exchangePost = exchangePostRepository.findById(exchangePostId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EXCHANGE_POST_NOT_FOUND));
 
