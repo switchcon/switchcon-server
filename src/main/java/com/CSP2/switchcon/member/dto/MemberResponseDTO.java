@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberResponseDTO {
 
-    private final long memberId;
+    private final Long memberId;
     private final String nickname;
     private final int exchangeCoin;
     private final boolean notifyOn;

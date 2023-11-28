@@ -14,7 +14,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class ExchangeRequestResponseDTO {
 
-    private final long exchangePostId;
+    private final Long exchangePostId;
 
     public static ExchangeRequestResponseDTO from (ExchangeRequest exchangeRequest) {
         return ExchangeRequestResponseDTO.builder()

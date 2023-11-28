@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class AllGifticonsResponseDTO {
 
-    private final long gifticonId;
+    private final Long gifticonId;
 
     private final String gifticonImg;
 

@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ExchangePostRequestDTO {
-    private long gifticonId;
+    private Long gifticonId;
     private String preference;
 }

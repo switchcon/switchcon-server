@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class ExchangePostResponseDTO {
 
-    private final long memberId;
+    private final Long memberId;
 
     private final String gifticonImg;
 

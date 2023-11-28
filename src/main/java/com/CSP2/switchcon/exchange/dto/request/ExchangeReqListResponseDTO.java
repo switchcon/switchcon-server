@@ -19,9 +19,9 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class ExchangeReqListResponseDTO {
 
-    private final long memberId;
+    private final Long memberId;
 
-    private final long exchangeRequestId;
+    private final Long exchangeRequestId;
 
     private final String category;
 

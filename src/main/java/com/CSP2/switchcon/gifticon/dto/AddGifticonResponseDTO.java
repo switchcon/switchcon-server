@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class AddGifticonResponseDTO {
 
-    private final long gifticonId;
+    private final Long gifticonId;
 
     public static AddGifticonResponseDTO from (Gifticon gifticon) {
         return AddGifticonResponseDTO.builder()

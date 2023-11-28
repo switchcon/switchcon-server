@@ -12,7 +12,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class AddExchangePostReponseDTO {
 
-    private final long exchangePostId;
+    private final Long exchangePostId;
 
     public static AddExchangePostReponseDTO from (ExchangePost exchangePost) {
         return AddExchangePostReponseDTO.builder()

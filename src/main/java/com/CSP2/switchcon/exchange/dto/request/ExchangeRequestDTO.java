@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class ExchangeRequestDTO {
-    private long gifticonId;
+    private Long gifticonId;
 }

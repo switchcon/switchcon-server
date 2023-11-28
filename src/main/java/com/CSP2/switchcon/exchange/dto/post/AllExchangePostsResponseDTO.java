@@ -16,7 +16,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class AllExchangePostsResponseDTO {
 
-    private final long exchangePostId;
+    private final Long exchangePostId;
 
     private final String gifticonImg;
 
