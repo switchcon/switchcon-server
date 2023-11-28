@@ -12,11 +12,11 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class AddGifticonResponseDTO {
 
-    private final long id;
+    private final long gifticonId;
 
     public static AddGifticonResponseDTO from (Gifticon gifticon) {
         return AddGifticonResponseDTO.builder()
-                .id(gifticon.getId())
+                .gifticonId(gifticon.getId())
                 .build();
     }
 }

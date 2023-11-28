@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(access = PRIVATE)
 public class AllGifticonsResponseDTO {
 
-    private final long id;
+    private final long gifticonId;
 
     private final String gifticonImg;
 
@@ -38,7 +38,7 @@ public class AllGifticonsResponseDTO {
 
     public static AllGifticonsResponseDTO from (Gifticon gifticon) {
         return AllGifticonsResponseDTO.builder()
-                .id(gifticon.getId())
+                .gifticonId(gifticon.getId())
                 .gifticonImg(gifticon.getGifticonImg())
                 .category(gifticon.getCategory())
                 .store(gifticon.getStore())

@@ -10,14 +10,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberResponseDTO {
 
-    private final long id;
+    private final long memberId;
     private final String nickname;
     private final int exchangeCoin;
     private final boolean notifyOn;
 
     public static MemberResponseDTO from (Member member) {
         return MemberResponseDTO.builder()
-                .id(member.getId())
+                .memberId(member.getId())
                 .nickname(member.getNickname())
                 .exchangeCoin(member.getExchangeCoin())
                 .notifyOn(member.isNotifyOn())
