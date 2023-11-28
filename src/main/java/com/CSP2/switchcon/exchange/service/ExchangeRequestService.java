@@ -5,6 +5,7 @@ import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.exchange.domain.ExchangeRequest;
+import com.CSP2.switchcon.exchange.domain.ExchangeStatus;
 import com.CSP2.switchcon.exchange.dto.post.AllExchangePostsResponseDTO;
 import com.CSP2.switchcon.exchange.dto.request.ExchangeRequestResponseDTO;
 import com.CSP2.switchcon.exchange.repository.ExchangePostRepository;
@@ -144,7 +145,8 @@ public class ExchangeRequestService {
         return exchangePosts.stream()
                 .map(ep -> {
                     int requestCnt = exchangeRequestRepository.countByPostId(ep.getId());
-                    return AllExchangePostsResponseDTO.from(ep.getGifticon(), ep, requestCnt);
+                    ExchangeRequest exchangeRequest = exchangeRequestRepository.findByMemberIdAndPostId(member, ep.getId());
+                    return AllExchangePostsResponseDTO.of(ep.getGifticon(), ep, exchangeRequest, requestCnt);
                 }).collect(Collectors.toList());
     }
 }

@@ -25,7 +25,7 @@ public class MemberController {
     private final BasicResponse basicResponse = new BasicResponse();
 
     @GetMapping("/mypage/exchangePosts")
-    @Operation(summary = "등록한 교환 게시물 조회", description = "사용자가 등록한 교환 게시물을 조회합니다.")
+    @Operation(summary = "교환 등록글 조회", description = "교환 등록글을 조회합니다.")
     public ResponseEntity<BasicResponse> getMyExchangePosts(@ReqMember SecurityUserDetails securityUserDetails) {
         return basicResponse.ok(
                 exchangePostService.getMyExchangePosts(securityUserDetails.member())
@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/exchangeRequests")
-    @Operation(summary = "등록한 교환 요청 조회", description = "사용자가 등록한 교환 요청을 조회합니다.")
+    @Operation(summary = "교환 신청글 조회", description = "교환 신청글을 조회합니다.")
     public ResponseEntity<BasicResponse> getMyExchangeRequests(@ReqMember SecurityUserDetails securityUserDetails) {
         return basicResponse.ok(
                 exchangeRequestService.getMyExchangeRequests(securityUserDetails.member())

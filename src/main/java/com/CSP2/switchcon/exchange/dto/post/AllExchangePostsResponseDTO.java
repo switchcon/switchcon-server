@@ -1,6 +1,7 @@
 package com.CSP2.switchcon.exchange.dto.post;
 
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
+import com.CSP2.switchcon.exchange.domain.ExchangeRequest;
 import com.CSP2.switchcon.exchange.domain.ExchangeStatus;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -42,6 +43,19 @@ public class AllExchangePostsResponseDTO {
                 .product(gifticon.getProduct())
                 .price(gifticon.getPrice())
                 .status(exchangePost.getStatus())
+                .requestCnt(requestCnt)
+                .build();
+    }
+
+    public static AllExchangePostsResponseDTO of (Gifticon gifticon, ExchangePost exchangePost, ExchangeRequest exchangeRequest, int requestCnt) {
+        return AllExchangePostsResponseDTO.builder()
+                .exchangePostId(exchangePost.getId())
+                .gifticonImg(gifticon.getGifticonImg())
+                .category(gifticon.getCategory())
+                .store(gifticon.getStore())
+                .product(gifticon.getProduct())
+                .price(gifticon.getPrice())
+                .status(exchangeRequest.getStatus())
                 .requestCnt(requestCnt)
                 .build();
     }

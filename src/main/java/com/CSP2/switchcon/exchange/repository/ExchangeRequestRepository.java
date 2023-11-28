@@ -12,14 +12,17 @@ import java.util.List;
 public interface ExchangeRequestRepository extends JpaRepository<ExchangeRequest, Long> {
 
     @Query(value = "select er from ExchangeRequest er where er.exchangePost.id = :postId")
-    List<ExchangeRequest> findAllByPostId(@Param("postId") long postId);
+    List<ExchangeRequest> findAllByPostId(@Param("postId") Long postId);
 
     @Query(value = "select er from ExchangeRequest er where er.exchangePost.id = :postId and er.id != :reqId")
-    List<ExchangeRequest> findAllByPostIdAndReqId(@Param("postId") long postId, @Param("reqId") long reqId);
+    List<ExchangeRequest> findAllByPostIdAndReqId(@Param("postId") Long postId, @Param("reqId") Long reqId);
 
     @Query(value = "select count(er) from ExchangeRequest er where er.exchangePost.id = :postId")
-    int countByPostId(@Param("postId") long postId);
+    int countByPostId(@Param("postId") Long postId);
 
     @Query(value = "select er.exchangePost from ExchangeRequest er where er.gifticon.member = :member")
     List<ExchangePost> findAllByMemberId(@Param("member") Member member);
+
+    @Query(value = "select er from ExchangeRequest er where er.gifticon.member = :member and er.exchangePost.id = :postId")
+    ExchangeRequest findByMemberIdAndPostId(@Param("member") Member member, @Param("postId") Long postId);
 }
