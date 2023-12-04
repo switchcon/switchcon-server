@@ -5,15 +5,14 @@ import com.CSP2.switchcon.common.exception.EntityNotFoundException;
 import com.CSP2.switchcon.common.exception.ErrorCode;
 import com.CSP2.switchcon.exchange.domain.ExchangePost;
 import com.CSP2.switchcon.exchange.domain.ExchangeRequest;
-import com.CSP2.switchcon.exchange.domain.ExchangeStatus;
 import com.CSP2.switchcon.exchange.dto.post.AllExchangePostsResponseDTO;
 import com.CSP2.switchcon.exchange.dto.request.ExchangeRequestResponseDTO;
 import com.CSP2.switchcon.exchange.repository.ExchangePostRepository;
 import com.CSP2.switchcon.exchange.repository.ExchangeRequestRepository;
 import com.CSP2.switchcon.gifticon.domain.Gifticon;
-import com.CSP2.switchcon.gifticon.dto.AllGifticonsResponseDTO;
 import com.CSP2.switchcon.gifticon.repository.GifticonRepository;
 import com.CSP2.switchcon.member.domain.Member;
+import com.CSP2.switchcon.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,7 @@ public class ExchangeRequestService {
     private final GifticonRepository gifticonRepository;
     private final ExchangePostRepository exchangePostRepository;
     private final ExchangeRequestRepository exchangeRequestRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ExchangeRequestResponseDTO addExchangeRequest(Member member, long exchangePostId, long gifticonId) {
@@ -135,7 +135,9 @@ public class ExchangeRequestService {
 
         if (member.getExchangeCoin() < 1 || exchangeRequest.getGifticon().getMember().getExchangeCoin() < 1)
             throw new BusinessException(ErrorCode.TOO_LITTLE_COIN);
+
         member.minusExchangeCoin();
+        memberRepository.save(member);
         exchangeRequest.getGifticon().getMember().minusExchangeCoin();
     }
 
