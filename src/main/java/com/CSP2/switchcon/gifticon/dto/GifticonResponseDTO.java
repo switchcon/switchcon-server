@@ -36,7 +36,7 @@ public class GifticonResponseDTO {
     )
     private final LocalDate expireDate;
 
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private final long price;
 
     private final boolean isUsed;
