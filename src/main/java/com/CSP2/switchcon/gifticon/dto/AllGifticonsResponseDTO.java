@@ -32,6 +32,9 @@ public class AllGifticonsResponseDTO {
     )
     private final LocalDate expireDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private final long price;
+
     private final boolean isUsed;
 
     private final boolean isActive;
@@ -44,6 +47,7 @@ public class AllGifticonsResponseDTO {
                 .store(gifticon.getStore())
                 .product(gifticon.getProduct())
                 .expireDate(gifticon.getExpireDate())
+                .price(gifticon.getPrice())
                 .isUsed(gifticon.isUsed())
                 .isActive(gifticon.isActive())
                 .build();
