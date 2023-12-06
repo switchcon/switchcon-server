@@ -11,6 +11,7 @@ import com.CSP2.switchcon.member.domain.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.CSP2.switchcon.gifticon.auth.SwitchconHMACAuthenticator.getAuthStringQRUse;
 import static com.CSP2.switchcon.gifticon.auth.SwitchconHMACAuthenticator.getAuthStringRegister;
 
 @Service
@@ -131,31 +133,28 @@ public class GifticonService {
         WebClient client = WebClient.builder()
                 .baseUrl(GIFTICON_SERVER_URL)
                 .build();
-        try {
-            String requestUrl = String.format("/gifticon/additem?barcodenum=%s&productname=%s&category=%s&price=%d&used=%s&expiredate=%s",
-                    gifticon.getBarcodeNum(), gifticon.getProduct(), gifticon.getCategory(), gifticon.getPrice(), gifticon.isUsed(), gifticon.getExpireDate());
 
-            String response = client.post()
-                    .uri(requestUrl)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.TEXT_PLAIN)
-                    .bodyValue("")
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+        String requestUrl = String.format("/gifticon/additem?barcodenum=%s&productname=%s&category=%s&price=%d&used=%s&expiredate=%s",
+                gifticon.getBarcodeNum(), gifticon.getProduct(), gifticon.getCategory(), gifticon.getPrice(), gifticon.isUsed(), gifticon.getExpireDate());
 
-            if ("success".equals(response)) {
-                System.out.println("Success");
-            } else {
-                throw new BusinessException(ErrorCode.ERROR_IN_GIFTICON_SERVER);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        client.post()
+                .uri(requestUrl)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.TEXT_PLAIN)
+                .bodyValue("")
+                .exchange()
+                .flatMap(clientResponse -> {
+                    if (clientResponse.statusCode().is4xxClientError()) {
+                        return Mono.error(new BusinessException(ErrorCode.ELSE));
+                    } else {
+                        return Mono.just("success");
+                    }
+                })
+                .block();
     }
 
     @Transactional
-    public String SendRegisterReq(String barcodeNum) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
+    public void SendRegisterReq(String barcodeNum) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
 
         String base64Barcode = getAuthStringRegister(barcodeNum, "switchcon", keyBytes);
 
@@ -163,18 +162,25 @@ public class GifticonService {
                 .baseUrl(GIFTICON_SERVER_URL)
                 .build();
 
-        return client.post()
+        client.post()
                 .uri("/gifticon/encrypt/register/" + barcodeNum)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.TEXT_PLAIN)
                 .bodyValue(base64Barcode)
                 .exchange()
                 .flatMap(clientResponse -> {
-                    if (clientResponse.statusCode().is4xxClientError()) {
-                        return Mono.error(new BusinessException(ErrorCode.ERROR_IN_GIFTICON_SERVER));
-                    } else {
+                    if (clientResponse.statusCode() == HttpStatus.BAD_REQUEST)
+                        return Mono.error(new BusinessException(ErrorCode.NOT_EXISTING_IN_DATABASE));
+                    else if (clientResponse.statusCode() == HttpStatus.NOT_ACCEPTABLE)
+                        return Mono.error(new BusinessException(ErrorCode.EXPIRED_BARCODE));
+                    else if (clientResponse.statusCode() == HttpStatus.CONFLICT)
+                        return Mono.error(new BusinessException(ErrorCode.HASH_CHECK_FAILURE));
+                    else if (clientResponse.statusCode() == HttpStatus.GONE)
+                        return Mono.error(new BusinessException(ErrorCode.USED_BARCODE));
+                    else if (clientResponse.statusCode() == HttpStatus.UNPROCESSABLE_ENTITY)
+                        return Mono.error(new BusinessException(ErrorCode.ELSE));
+                    else
                         return Mono.just("success");
-                    }
                 })
                 .block();
     }
@@ -222,5 +228,51 @@ public class GifticonService {
             throw new BusinessException(ErrorCode.INACTIVE_GIFTION);
 
         gifticonRepository.delete(gifticon);
+    }
+
+    @Transactional
+    public String useGifticon(Member member, long gifticonId) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
+        Gifticon gifticon = gifticonRepository.findByIdAndMember(member, gifticonId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
+
+        if (gifticon.isActive() == false || gifticon.isUsed() == true)
+            throw new BusinessException(ErrorCode.INACTIVE_GIFTION);
+
+        String base64Barcode = getAuthStringQRUse(gifticon.getBarcodeNum(), "switchcon", keyBytes);
+
+        WebClient client = WebClient.builder()
+                .baseUrl(GIFTICON_SERVER_URL)
+                .build();
+
+        client.post()
+                .uri("/gifticon/encrypt/useqrcode")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.TEXT_PLAIN)
+                .bodyValue(base64Barcode)
+                .exchange()
+                .flatMap(clientResponse -> {
+                    if (clientResponse.statusCode() == HttpStatus.BAD_REQUEST)
+                        return Mono.error(new BusinessException(ErrorCode.NOT_EXISTING_IN_DATABASE));
+                    else if (clientResponse.statusCode() == HttpStatus.UNAUTHORIZED)
+                        return Mono.error(new BusinessException(ErrorCode.SWITCHCON_REGISTERED_INVALID_USE));
+                    else if (clientResponse.statusCode() == HttpStatus.NOT_ACCEPTABLE)
+                        return Mono.error(new BusinessException(ErrorCode.EXPIRED_BARCODE));
+                    else if (clientResponse.statusCode() == HttpStatus.REQUEST_TIMEOUT)
+                        return Mono.error(new BusinessException(ErrorCode.SWITCHCON_TIMEOUT));
+                    else if (clientResponse.statusCode() == HttpStatus.CONFLICT)
+                        return Mono.error(new BusinessException(ErrorCode.HASH_CHECK_FAILURE));
+                    else if (clientResponse.statusCode() == HttpStatus.GONE)
+                        return Mono.error(new BusinessException(ErrorCode.USED_BARCODE));
+                    else if (clientResponse.statusCode() == HttpStatus.UNPROCESSABLE_ENTITY)
+                        return Mono.error(new BusinessException(ErrorCode.ELSE));
+                    else
+                        return Mono.just("success");
+                })
+                .block();
+
+        gifticon.updateUse(true);
+        gifticon.updateActive(false);
+
+        return "기프티콘이 성공적으로 사용처리 되었습니다.";
     }
 }

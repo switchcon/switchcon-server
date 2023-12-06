@@ -67,4 +67,13 @@ public class GifticonController {
         gifticonService.delGifticon(securityUserDetails.member(), gifticonId);
         return  basicResponse.noContent();
     }
+
+    @PostMapping("/use/{gifticonId}")
+    @Operation(summary = "기프티콘 사용", description = "기프티콘을 사용합니다.")
+    public ResponseEntity<BasicResponse> useGifticon(@ReqMember SecurityUserDetails securityUserDetails,
+                                                     @PathVariable ("gifticonId") long gifticonId) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
+        return basicResponse.ok(
+                gifticonService.useGifticon(securityUserDetails.member(), gifticonId)
+        );
+    }
 }

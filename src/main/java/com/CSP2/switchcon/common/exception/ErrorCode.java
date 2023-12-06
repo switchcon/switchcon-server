@@ -30,7 +30,13 @@ public enum ErrorCode {
     EXCHANGE_REQUEST_NOT_FOUND(404, "ER_001", "교환 요청을 찾을 수 없습니다."),
     FORBIDDEN_DELETE_EXCHANGE_REQUEST(403, "ER_002", "교환 요청을 삭제할 권한이 없습니다."),
 
-    ERROR_IN_GIFTICON_SERVER(400, "GS_001", "기프티콘 서버에서 에러가 발생했습니다.");
+    NOT_EXISTING_IN_DATABASE(400, "GS_001", "바코드를 찾을 수 없습니다."),
+    SWITCHCON_REGISTERED_INVALID_USE(401, "GS_002", "스위치콘에 등록된 바코드가 사용된 상태입니다."),
+    EXPIRED_BARCODE(406, "GS_003","만료된 바코드입니다."),
+    SWITCHCON_TIMEOUT(408, "GS_004", "기프티콘의 바코드가 만료된 상태입니다."),
+    HASH_CHECK_FAILURE(409, "GS_005", "암호화된 데이터가 일치하지 않습니다."),
+    USED_BARCODE(410, "GS_006", "이미 사용처리 된 바코드입니다."),
+    ELSE(422, "GS_007","스위치콘 등록/사용 서버에서 문제가 발생하였습니다.");
     ;
 
     private final int status;
