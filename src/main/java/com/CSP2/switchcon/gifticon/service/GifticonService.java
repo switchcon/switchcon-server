@@ -16,11 +16,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.CSP2.switchcon.gifticon.auth.SwitchconHMACAuthenticator.getAuthStringRegister;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +33,20 @@ public class GifticonService {
 
     @Value("${ocr.url}")
     private String OCR_SERVER_URL;
+
+    @Value("${gifticonServer.url}")
+    private String GIFTICON_SERVER_URL;
+
+    private static byte[] keyBytes = {
+            (byte)0x01,(byte)0x01,(byte)0x01,(byte)0x01,
+            (byte)0x02,(byte)0x02,(byte)0x02,(byte)0x02,
+            (byte)0x03,(byte)0x03,(byte)0x03,(byte)0x03,
+            (byte)0x04,(byte)0x04,(byte)0x04,(byte)0x04,
+            (byte)0x05,(byte)0x05,(byte)0x05,(byte)0x05,
+            (byte)0x06,(byte)0x06,(byte)0x06,(byte)0x06,
+            (byte)0x07,(byte)0x07,(byte)0x07,(byte)0x07,
+            (byte)0x08,(byte)0x08,(byte)0x08,(byte)0x08,
+    };
 
     private final GifticonRepository gifticonRepository;
 
@@ -83,7 +102,7 @@ public class GifticonService {
     }
 
     @Transactional
-    public AddGifticonResponseDTO addGifticon(Member member, GifticonRequestDTO requestDTO) {
+    public AddGifticonResponseDTO addGifticon(Member member, GifticonRequestDTO requestDTO) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
 
         Gifticon gifticon = Gifticon.builder()
                 .gifticonImg(requestDTO.getGifticonImg())
@@ -99,8 +118,65 @@ public class GifticonService {
                 .member(member)
                 .build();
 
+        SendAddItem(gifticon);
+        SendRegisterReq(requestDTO.getBarcodeNum());
         Gifticon saved = gifticonRepository.save(gifticon);
+
         return AddGifticonResponseDTO.from(saved);
+    }
+
+    @Transactional
+    public void SendAddItem(Gifticon gifticon) {
+
+        WebClient client = WebClient.builder()
+                .baseUrl(GIFTICON_SERVER_URL)
+                .build();
+        try {
+            String requestUrl = String.format("/gifticon/additem?barcodenum=%s&productname=%s&category=%s&price=%d&used=%s&expiredate=%s",
+                    gifticon.getBarcodeNum(), gifticon.getProduct(), gifticon.getCategory(), gifticon.getPrice(), gifticon.isUsed(), gifticon.getExpireDate());
+
+            String response = client.post()
+                    .uri(requestUrl)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .bodyValue("")
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            if ("success".equals(response)) {
+                System.out.println("Success");
+            } else {
+                throw new BusinessException(ErrorCode.ERROR_IN_GIFTICON_SERVER);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Transactional
+    public String SendRegisterReq(String barcodeNum) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
+
+        String base64Barcode = getAuthStringRegister(barcodeNum, "switchcon", keyBytes);
+
+        WebClient client = WebClient.builder()
+                .baseUrl(GIFTICON_SERVER_URL)
+                .build();
+
+        return client.post()
+                .uri("/gifticon/encrypt/register/" + barcodeNum)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.TEXT_PLAIN)
+                .bodyValue(base64Barcode)
+                .exchange()
+                .flatMap(clientResponse -> {
+                    if (clientResponse.statusCode().is4xxClientError()) {
+                        return Mono.error(new BusinessException(ErrorCode.ERROR_IN_GIFTICON_SERVER));
+                    } else {
+                        return Mono.just("success");
+                    }
+                })
+                .block();
     }
 
     @Transactional

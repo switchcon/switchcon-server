@@ -29,6 +29,8 @@ public enum ErrorCode {
 
     EXCHANGE_REQUEST_NOT_FOUND(404, "ER_001", "교환 요청을 찾을 수 없습니다."),
     FORBIDDEN_DELETE_EXCHANGE_REQUEST(403, "ER_002", "교환 요청을 삭제할 권한이 없습니다."),
+
+    ERROR_IN_GIFTICON_SERVER(400, "GS_001", "기프티콘 서버에서 에러가 발생했습니다.");
     ;
 
     private final int status;

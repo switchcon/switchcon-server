@@ -12,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/gifticon")
 @Tag(name = "🎁 기프티콘", description = "기프티콘 CRUD API")
@@ -32,7 +36,7 @@ public class GifticonController {
     @PostMapping("")
     @Operation(summary = "기프티콘 등록", description = "기프티콘을 등록합니다.")
     public ResponseEntity<BasicResponse> saveGifticon(@ReqMember SecurityUserDetails securityUserDetails,
-                                                   @RequestBody GifticonRequestDTO requestDTO) {
+                                                   @RequestBody GifticonRequestDTO requestDTO) throws NoSuchAlgorithmException, IOException, InvalidKeyException {
         return basicResponse.ok(
                 gifticonService.addGifticon(securityUserDetails.member(), requestDTO)
         );
