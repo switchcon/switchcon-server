@@ -235,7 +235,7 @@ public class GifticonService {
         Gifticon gifticon = gifticonRepository.findByIdAndMember(member, gifticonId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.GIFTICON_NOT_FOUND));
 
-        if (gifticon.isActive() == false || gifticon.isUsed() == true)
+        if (gifticon.isActive() == false)
             throw new BusinessException(ErrorCode.INACTIVE_GIFTION);
 
         String base64Barcode = getAuthStringQRUse(gifticon.getBarcodeNum(), "switchcon", keyBytes);
